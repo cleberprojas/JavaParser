@@ -24,6 +24,7 @@ public class LogFileReader {
          lstData.add(new LogData(r));
       }
     }catch (IOException e) {
+      //TODO Handle this IOException
       System.err.format("IOException: %s%n", e);
       throw e;
     }

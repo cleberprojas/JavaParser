@@ -1,7 +1,6 @@
 package com.ef;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LogData {
@@ -37,7 +36,7 @@ public class LogData {
   
    private void setDate(String sDate) {
      try {
-       this.logDate = ParserUtils.getStringAsDate(sDate);
+       this.logDate = ParserUtils.stringAsDate(sDate);
      } catch (ParseException e) {
        e.printStackTrace();
      }
