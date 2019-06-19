@@ -36,13 +36,28 @@ public class Parser{
       rst.entrySet()
          .stream()
          .filter(entry-> entry.getValue() >= Integer.parseInt(threshold))
-         .forEach(entry-> System.out.println(entry.getKey()));
+         .forEach(entry->{
+        	 System.out.println(entry.getKey());
+        	 StringBuilder sb = new StringBuilder(" IP Blocked due too many request.")
+        			 .append(" Request count:")
+        			 .append(entry.getValue())
+        			 .append( " Beginning at:  " )
+        			 .append( ParserUtils.dateToString(start))
+        			 .append( " Ending at : ")
+        			 .append(ParserUtils.dateToString(end.getTime()));
+        	 addIpToBlockedList(entry.getKey(),sb.toString()); 
+         } );
     } catch (IOException | IllegalArgumentException | ParseException e ) {
       System.err.println(e.getMessage());
     } 
     
     long end = System.currentTimeMillis();
     System.out.println("TEMPO "+ (end - begin)/1000);
+  }
+  
+  private static int addIpToBlockedList(String ipBlocked, String blockedMessage) {
+	  LogDataRepository repo = new LogDataRepository();
+	  return repo.saveBlockedIp(ipBlocked, blockedMessage);
   }
   
   private static int saveLogs(List<LogData> logs) {

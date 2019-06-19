@@ -37,4 +37,9 @@ public class ParserUtils {
     return formatter.format(date);
   }
   
+  public static String dateToString(Date date, String customFormat) {
+	    SimpleDateFormat formatter = new SimpleDateFormat(customFormat); 
+	    return formatter.format(date);
+	  }
+  
 }

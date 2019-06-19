@@ -1,6 +1,6 @@
 CREATE DATABASE `acess_log_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
 
-CREATE TABLE `acess_log` (
+CREATE TABLE `acess_log_db`.`acess_log` (
   `id_acess_log` int(11) NOT NULL AUTO_INCREMENT,
   `s_acess_date` varchar(45) DEFAULT NULL,
   `s_acess_ip` varchar(45) DEFAULT NULL,
@@ -9,3 +9,10 @@ CREATE TABLE `acess_log` (
   `s_acess_user_agent` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_acess_log`)
 ) ENGINE=InnoDB AUTO_INCREMENT=819828 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `acess_log_db`.`acess_blocked_ip` (
+  `id_acess_blocked_ip` int(11) NOT NULL AUTO_INCREMENT,
+  `s_acess_ip` varchar(45) DEFAULT NULL,
+  `s_acess_blocked_reason` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_acess_blocked_ip`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

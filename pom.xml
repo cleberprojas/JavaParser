@@ -6,7 +6,6 @@
   <artifactId>parser</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
-
   <name>parser</name>
   <url>http://maven.apache.org</url>
 
@@ -30,6 +29,9 @@
 	    <artifactId>mysql-connector-java</artifactId>
 	    <version>8.0.16</version>
 	</dependency>
-    
   </dependencies>
+  
+  <build>
+  		<finalName>${project.artifactId}</finalName>
+  </build>
 </project>

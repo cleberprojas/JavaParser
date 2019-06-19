@@ -26,13 +26,15 @@ public class LogDataRepository implements Repository {
                                               " s_acess_user_agent) " + 
                                               " VALUES ( ?, ?, ?, ?, ?) ";
   
+  private static final String INSERT_BLOCKED_IP = "  INSERT INTO acess_log_db.acess_blocked_ip " + 
+										  		"  ( s_acess_ip, s_acess_blocked_reason)" + 
+										  		"  VALUES (?, ? )"; 
   private Connection conn;
   private  PreparedStatement ps;
   
   @Override
   public int register(LogData log) {
     int rows = 0;
-    Connection conn = null;
     try {
         conn = ConnectionFactory.getConnection();
         PreparedStatement ps = conn.prepareStatement(INSERT_VALUES);
@@ -51,6 +53,35 @@ public class LogDataRepository implements Repository {
         System.err.println(e.getMessage());
       }
     }
+    return rows;
+  }
+  
+  public int saveBlockedIp(String ipBlocked, String blockedMessage ) {
+    int rows = 0;
+    try {
+        conn = ConnectionFactory.getConnection();
+        ps = conn.prepareStatement(INSERT_BLOCKED_IP);
+        ps.setString(1, ipBlocked);
+        ps.setString(2, blockedMessage);
+        rows = ps.executeUpdate();
+    }catch (ClassNotFoundException | SQLException e) {
+        System.err.println(e.getMessage());
+        if (conn != null) {
+            try {
+                System.err.print("Transaction is being rolled back");
+                conn.rollback();
+            } catch(SQLException excep) {
+              System.err.println(e.getMessage());
+            }
+        }
+      }finally {
+        try {
+          conn.close();
+          ps.close();
+        } catch (SQLException e) {
+          System.err.println(e.getMessage());
+        }
+      }
     return rows;
   }
 
@@ -90,7 +121,7 @@ public class LogDataRepository implements Repository {
         ps = conn.prepareStatement(INSERT_VALUES);
         int i = 0;
         for(LogData log :logs) {
-          ps.setString(1, ParserUtils.dateToString(log.getLogDate()));
+          ps.setString(1, ParserUtils.dateToString(log.getLogDate(),"yyyy-MM-dd.HH:mm:ss.SSS"));
           ps.setString(2, log.getIpNumber());
           ps.setString(3, log.getRequestMethod());
           ps.setString(4, log.getStatusCode());
@@ -114,7 +145,7 @@ public class LogDataRepository implements Repository {
       }
     }finally {
       try {
-        conn.setAutoCommit(false);
+        conn.setAutoCommit(true);
         conn.close();
         ps.close();
       } catch (SQLException e) {
