@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import org.apache.log4j.Logger;
 import com.ef.dto.LogDataDTO;
 import com.ef.model.LogData;
 import com.ef.repository.LogDataRepository;
@@ -20,7 +21,9 @@ public class ParserHandler {
   private static String startDate; 
   private static String duration;  
   private static int threshold; 
-
+  
+  final static Logger logger = Logger.getLogger(ParserHandler.class);
+  
   public void handleLogFile(String[] args) {
     List<LogData> logs = new ArrayList<>();
     try {
@@ -42,11 +45,13 @@ public class ParserHandler {
                  addIpToBlockedList(logIp.getIpNumber(), getBlockedMessage(logIp, start, end.getTime())); 
                });
       }else {
-        System.out.println("No IP found with the informed paramns.");
+        System.out.println();
+        logger.error("No IP found with the informed paramns.");
       }
       
     } catch (IOException | IllegalArgumentException | ParseException e ) {
       System.err.println(e.getMessage());
+      logger.error(e.getStackTrace());
     } 
   }
 
