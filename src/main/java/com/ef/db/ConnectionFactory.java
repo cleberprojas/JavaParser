@@ -1,4 +1,4 @@
-package com.ef;
+package com.ef.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

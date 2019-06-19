@@ -1,7 +1,8 @@
-package com.ef;
+package com.ef.model;
 
 import java.text.ParseException;
 import java.util.Date;
+import com.ef.utils.ParserUtils;
 
 public class LogData {
   

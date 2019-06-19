@@ -1,4 +1,4 @@
-package com.ef;
+package com.ef.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import com.ef.model.LogData;
 
 public class LogFileReader {
 
@@ -24,9 +25,7 @@ public class LogFileReader {
          lstData.add(new LogData(r));
       }
     }catch (IOException e) {
-      //TODO Handle this IOException
-      System.err.format("IOException: %s%n", e);
-      throw e;
+      throw new IOException(ErrorMessage.INVALID_PATH_VALUE.getMessage() + e.getMessage());
     }
     return lstData;
   }
