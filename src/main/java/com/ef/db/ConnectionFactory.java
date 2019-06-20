@@ -1,23 +1,36 @@
 package com.ef.db;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConnectionFactory {
-
-  public static Connection getConnection() throws SQLException, ClassNotFoundException {
+ 
+  private static  Connection con;
+  
+  public Connection getConnection() throws SQLException, ClassNotFoundException {
     Properties props = new Properties();
-    props.put("user", "root");
-    props.put("password", "admin");
-    String databaseURL = "jdbc:mysql://localhost:3306/acess_log_db?useTimezone=true&serverTimezone=UTC";
-    Class.forName("com.mysql.cj.jdbc.Driver"); 
-    return DriverManager.getConnection(databaseURL,props);
+    try {
+		props.load(readFile());
+		String user = props.getProperty("user").trim();
+		String password = props.getProperty("password").trim();
+		String className = props.getProperty("mysql.class").trim();
+		String databaseURL = props.getProperty("databaseURL").trim();
+	    Class.forName(className); 
+	    con = DriverManager.getConnection(databaseURL,user, password);
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+    return con;
   }
   
-  private ConnectionFactory() {
-    throw new IllegalStateException("Utility class");
+  private  InputStream readFile() throws IOException {
+	  InputStream path = this.getClass().getClassLoader().getResourceAsStream("db.properties");
+	  return path;
   }
+  
 
 }

@@ -16,6 +16,10 @@ public class HandleImportLog implements Handler {
 	
 	final static Logger logger = Logger.getLogger(HandleRequestOccurrences.class);
 	
+	/**
+	 * Read Access Log file provided in arguments, then load in MySql DB
+	 * Not sure it`s AccesLog File is  Optional, but, if not provided, then do nothing
+	 * */
 	@Override
 	public void handleLogFile(ApplicationArguments arguments) {
 		List<LogData> logs = new ArrayList<>();

@@ -7,6 +7,5 @@ public interface Repository {
   
   public int register(LogData log);
   public int saveAll(List<LogData> logs);
-  public int saveBlockedIp(String ipBlocked, String blockedMessage );
 
 }

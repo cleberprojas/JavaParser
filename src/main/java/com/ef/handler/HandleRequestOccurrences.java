@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 import com.ef.dto.LogDataDTO;
 import com.ef.model.ApplicationArguments;
+import com.ef.model.LogData;
 import com.ef.repository.LogDataRepository;
 import com.ef.utils.ErrorMessage;
 import com.ef.utils.ParserUtils;
@@ -16,6 +17,9 @@ public class HandleRequestOccurrences implements Handler{
 
 	final static Logger logger = Logger.getLogger(HandleRequestOccurrences.class);
 
+	/**
+	 * Read from DB Ip's that made more than an certain numbers of Request in given time interval.
+	 * */
 	@Override
 	public void handleLogFile(ApplicationArguments arguments) {
 		try {
@@ -30,6 +34,18 @@ public class HandleRequestOccurrences implements Handler{
 					System.out.println(" - Times Requested : "+logIp.getTimesRequested());
 					addIpToBlockedList(logIp.getIpNumber(), getBlockedMessage(logIp, start, end.getTime())); 
 				});
+				
+				/**
+				 * (2) Write MySQL query to find requests made by a given IP.
+				 * NOT SURE HOW TO PROCEED WITH THIS, SO I KEEP IT COMMENTED 
+				 *   PLEASE UNCOMMENT IF YOU WAN TO RUN, I'LL SEND THI QUERY IN SQL FILE
+				Optional<List<LogData>> requests = findRequestMadeByGivenIp("192.168.129.191");
+				if(requests.isPresent()) {
+					requests.get().stream().forEach(logIp-> System.out.println(logIp.getSourceDescription()));
+				}else{
+					logger.info("No Log Entries found with the informed paramns.");
+				}*/
+				
 			}else {
 				logger.info("No IP found with the informed paramns.");
 			}
@@ -86,5 +102,14 @@ public class HandleRequestOccurrences implements Handler{
 	private static Optional<List<LogDataDTO>> findLogsByDateAndThreshold(Date start, Date end, int threshold  ) {
 		LogDataRepository repo = new LogDataRepository();
 		return repo.findLogsByDateAndThreshold(start, end, threshold);
+	}
+	
+	/**
+	 * Find Requests made by a given IP
+	 * 
+	 * */
+	private static Optional<List<LogData>> findRequestMadeByGivenIp(String ipNumber  ) {
+		LogDataRepository repo = new LogDataRepository();
+		return repo.findRequestByIp(ipNumber);
 	}
 }

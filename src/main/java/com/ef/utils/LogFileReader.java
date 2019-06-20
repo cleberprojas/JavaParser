@@ -21,9 +21,13 @@ public class LogFileReader {
     this.logFilePath = logFilePath;
   }
 
+  public BufferedReader readFile() throws IOException {
+	  return Files.newBufferedReader(Paths.get(logFilePath));
+  }
+  
   public List<LogData> toDataObject() throws  IOException {
     List<LogData> lstData = new ArrayList<>(); 
-    try( BufferedReader br = Files.newBufferedReader(Paths.get(logFilePath))){
+    try( BufferedReader br = readFile() ){
       String line;
       int lineNum =1;
       while ((line = br.readLine()) != null) {
