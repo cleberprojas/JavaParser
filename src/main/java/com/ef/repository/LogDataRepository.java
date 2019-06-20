@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import org.apache.log4j.Logger;
+
 import com.ef.db.ConnectionFactory;
 import com.ef.dto.LogDataDTO;
 import com.ef.model.LogData;
@@ -15,6 +18,8 @@ import com.ef.utils.ParserUtils;
 
 public class LogDataRepository implements Repository {
   
+  final static Logger logger = Logger.getLogger(LogDataRepository.class);
+	 
   private static final String CUSTOM_DATE_FORMAT = "yyyy-MM-dd.HH:mm:ss.SSS";
    
   private static final String INSERT_VALUES ="INSERT INTO acess_log_db.acess_log (" + 
@@ -56,7 +61,7 @@ public class LogDataRepository implements Repository {
         ps.setString(5, log.getSourceDescription());
         rows = ps.executeUpdate();
     } catch (ClassNotFoundException | SQLException e) {
-        System.err.println(e.getMessage());
+    	  logger.error(e.getMessage());
     }finally {
       try {
         if (conn != null) {
@@ -64,7 +69,7 @@ public class LogDataRepository implements Repository {
           conn.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getMessage());
+    	  logger.error(e.getMessage());
       }
     }
     return rows;
@@ -80,10 +85,10 @@ public class LogDataRepository implements Repository {
         ps.setString(2, blockedMessage);
         rows = ps.executeUpdate();
     }catch (ClassNotFoundException | SQLException e) {
-        System.err.println(e.getMessage());
+        logger.error(e.getMessage());
         if (conn != null) {
             try {
-                System.err.print("Transaction is being rolled back");
+            	  logger.error("Transaction is being rolled back");
                 conn.rollback();
             } catch(SQLException excep) {
               System.err.println(e.getMessage());
@@ -96,7 +101,7 @@ public class LogDataRepository implements Repository {
             conn.close();
           }
         } catch (SQLException e) {
-          System.err.println(e.getMessage());
+        	logger.error(e.getMessage());
         }
       }
     return rows;
@@ -124,13 +129,13 @@ public class LogDataRepository implements Repository {
           }
         }
     } catch (ClassNotFoundException | SQLException e) {
-      System.err.println(e.getMessage());
+    	logger.error(e.getMessage());
       if (conn != null) {
           try {
-              System.err.print("Transaction is being rolled back");
+              logger.error("Transaction is being rolled back");
               conn.rollback();
           } catch(SQLException excep) {
-            System.err.println(e.getMessage());
+        	  logger.error(e.getMessage());
           }
       }
     }finally {
@@ -139,7 +144,7 @@ public class LogDataRepository implements Repository {
         conn.close();
         ps.close();
       } catch (SQLException e) {
-        System.err.println(e.getMessage());
+    	  logger.error(e.getMessage());
       }    }
     return rows;
   }
@@ -158,7 +163,7 @@ public class LogDataRepository implements Repository {
                 resultSet.getLong(2)));
       }
     }catch (ClassNotFoundException | SQLException  e) {
-        System.err.println(e.getMessage());
+    	logger.error(e.getMessage());
     }finally {
       try {
         if (conn != null) {
@@ -167,7 +172,7 @@ public class LogDataRepository implements Repository {
           conn.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getMessage());
+    	  logger.error(e.getMessage());
       }
     }
     if(lstData.isEmpty())
@@ -187,7 +192,7 @@ public class LogDataRepository implements Repository {
             resultSet.getLong(2)));
       }
     }catch (ClassNotFoundException | SQLException  e) {
-      System.err.println(e.getMessage());
+    	logger.error(e.getMessage());
     }finally {
       try {
         if (conn != null) {
@@ -196,7 +201,7 @@ public class LogDataRepository implements Repository {
           conn.close();
         }
       } catch (SQLException e) {
-        System.err.println(e.getMessage());
+    	  logger.error(e.getMessage());
       }
     }
     if(lstData.isEmpty())
