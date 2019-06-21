@@ -27,7 +27,7 @@ public class Parser{
 			handleLogFile(arguments);
 			handleOccurrences(arguments);
 		}catch (Exception e){
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(),e.getCause());
 		}
 
 	}

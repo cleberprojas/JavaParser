@@ -72,8 +72,8 @@ public class LogDataRepository implements Repository {
         ps.setString(4, log.getStatusCode());
         ps.setString(5, log.getSourceDescription());
         rows = ps.executeUpdate();
-    } catch (ClassNotFoundException | SQLException e) {
-    	  logger.error(e.getMessage());
+    } catch (SQLException e) {
+    	logger.error(e.getMessage(),e.getCause());
     }finally {
       try {
         if (conn != null) {
@@ -81,7 +81,7 @@ public class LogDataRepository implements Repository {
           conn.close();
         }
       } catch (SQLException e) {
-    	  logger.error(e.getMessage());
+    	  logger.error(e.getMessage(),e.getCause());
       }
     }
     return rows;
@@ -95,14 +95,14 @@ public class LogDataRepository implements Repository {
         ps.setString(1, ipBlocked);
         ps.setString(2, blockedMessage);
         rows = ps.executeUpdate();
-    }catch (ClassNotFoundException | SQLException e) {
-        logger.error(e.getMessage());
+    }catch (SQLException e) {
+    	logger.error(e.getMessage(),e.getCause());
         if (conn != null) {
             try {
             	  logger.error("Transaction is being rolled back");
                 conn.rollback();
             } catch(SQLException excep) {
-              System.err.println(e.getMessage());
+            	logger.error(e.getMessage(),e.getCause());
             }
         }
       }finally {
@@ -112,7 +112,7 @@ public class LogDataRepository implements Repository {
             conn.close();
           }
         } catch (SQLException e) {
-        	logger.error(e.getMessage());
+        	logger.error(e.getMessage(),e.getCause());
         }
       }
     return rows;
@@ -135,18 +135,18 @@ public class LogDataRepository implements Repository {
           ps.addBatch();
           i++;
           if (i % 10000 == 0 || i == logs.size()) {
-            ps.executeBatch(); // Execute every 1000 items.
+            ps.executeBatch(); 
             conn.commit();
           }
         }
-    } catch (ClassNotFoundException | SQLException e) {
-    	logger.error(e.getMessage());
+    } catch (SQLException e) {
+    	logger.error(e.getMessage(),e.getCause());
       if (conn != null) {
           try {
               logger.error("Transaction is being rolled back");
               conn.rollback();
           } catch(SQLException excep) {
-        	  logger.error(e.getMessage());
+        	  logger.error(e.getMessage(),e.getCause());
           }
       }
     }finally {
@@ -155,8 +155,9 @@ public class LogDataRepository implements Repository {
         conn.close();
         ps.close();
       } catch (SQLException e) {
-    	  logger.error(e.getMessage());
-      }    }
+    	  logger.error(e.getMessage(),e.getCause());
+      }   
+    }
     return rows;
   }
 
@@ -173,8 +174,8 @@ public class LogDataRepository implements Repository {
         lstData.add( new LogDataDTO( resultSet.getString(1), 
                 resultSet.getLong(2)));
       }
-    }catch (ClassNotFoundException | SQLException  e) {
-    	logger.error(e.getMessage());
+    }catch (SQLException  e) {
+    	logger.error(e.getMessage(),e.getCause());
     }finally {
       try {
         if (conn != null) {
@@ -183,7 +184,7 @@ public class LogDataRepository implements Repository {
           conn.close();
         }
       } catch (SQLException e) {
-    	  logger.error(e.getMessage());
+    	  logger.error(e.getMessage(),e.getCause());
       }
     }
     if(lstData.isEmpty())
@@ -206,8 +207,8 @@ public class LogDataRepository implements Repository {
         						 resultSet.getString(5)
         						 ));
       }
-    }catch (ClassNotFoundException | SQLException | ParseException  e) {
-    	logger.error(e.getStackTrace());
+    }catch (SQLException | ParseException  e) {
+    	logger.error(e.getMessage(),e.getCause());
     }finally {
       try {
         if (conn != null) {
@@ -216,7 +217,7 @@ public class LogDataRepository implements Repository {
           conn.close();
         }
       } catch (SQLException e) {
-    		logger.error(e.getStackTrace());
+    	  logger.error(e.getMessage(),e.getCause());
       }
     }
     if(lstData.isEmpty())

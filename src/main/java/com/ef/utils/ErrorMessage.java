@@ -9,7 +9,7 @@ public enum ErrorMessage {
   DATE_FORMAT_ERROR(5,"invalid Date Format at param --startDate, use as follows "),
   PARAMNS_MISSING(6,"Some paramns are missing, Please enter as follow  --accesslog=/path/to/file --startDate=2017-01-01.13:00:00 --duration=hourly --threshold=100 "),
   INVALID_DURATION_VALUE(7,"Paramns --duration= should  be 'hourly' or 'daily', please verify the value informed "),
-  INVALID_THRESHOLD_VALUE(8,"Paramns --threshold= should  be Integer value, please verify the value informed "),
+  INVALID_THRESHOLD_VALUE(8,"Paramns --threshold= should  be Integer value, not Zero or Less, please verify the value informed "),
   INVALID_PATH_VALUE(9,"Log file informed in '--accesslog=' was not found, verify if the file exists or the path is correct. ");
   
   private final  int errorCode;

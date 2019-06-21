@@ -25,12 +25,16 @@ public class HandleImportLog implements Handler {
 		List<LogData> logs = new ArrayList<>();
 		try {
 			if(!StringUtils.isNullOrEmpty(arguments.getPathToFile() )){
+				logger.info("Starting to Parse and store the Log File to Database");
 				LogFileReader logFileReader = new LogFileReader(arguments.getPathToFile());
 				logs = logFileReader.toDataObject();
 				saveLogs(logs);
+				logger.info("Parse/Store Completed!");
+			}else {
+				logger.info("No Access Log File provided... going to next step");
 			}
 		 } catch (IOException e) {
-			 logger.error(e.getMessage());
+			 logger.error(e.getMessage(),e.getCause());
 		 }
 	}
 

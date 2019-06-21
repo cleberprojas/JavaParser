@@ -7,11 +7,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 public class ConnectionFactory {
  
   private static  Connection con;
   
-  public Connection getConnection() throws SQLException, ClassNotFoundException {
+  final static Logger logger = Logger.getLogger(ConnectionFactory.class);
+  
+  public Connection getConnection() {
     Properties props = new Properties();
     try {
 		props.load(readFile());
@@ -21,8 +25,8 @@ public class ConnectionFactory {
 		String databaseURL = props.getProperty("databaseURL").trim();
 	    Class.forName(className); 
 	    con = DriverManager.getConnection(databaseURL,user, password);
-	} catch (IOException e) {
-		e.printStackTrace();
+	} catch (IOException | SQLException | ClassNotFoundException e) {
+		logger.error(e.getMessage(),e.getCause());
 	}
     return con;
   }

@@ -23,8 +23,9 @@ public class HandleRequestOccurrences implements Handler{
 	@Override
 	public void handleLogFile(ApplicationArguments arguments) {
 		try {
+			logger.info("Looking for entries with the provided params");
 			Date start = ParserUtils.stringAsDate(arguments.getStartDate(),"yyyy-MM-dd.HH:mm:ss");
-			Calendar end = prepareDateParamns(arguments.getDuration(), start);
+			Calendar end = prepareDateParams(arguments.getDuration(), start);
 			Optional<List<LogDataDTO>> listIp = findLogsByDateAndThreshold(start, end.getTime(), arguments.getThreshold());
 			if(listIp.isPresent()) {
 				listIp.get()
@@ -43,22 +44,22 @@ public class HandleRequestOccurrences implements Handler{
 				if(requests.isPresent()) {
 					requests.get().stream().forEach(logIp-> System.out.println(logIp.getSourceDescription()));
 				}else{
-					logger.info("No Log Entries found with the informed paramns.");
+					logger.info("No Log Entries founded with the informed IP.");
 				}*/
 				
 			}else {
-				logger.info("No IP found with the informed paramns.");
+				logger.info("No Entries founded with the informed params.");
 			}
 
 		} catch ( IllegalArgumentException | ParseException e ) {
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(),e.getCause());
 		} 
 	}
 
 	/**
 	 * Add time to a Date, an Hour or a Day
 	 * */
-	private static Calendar prepareDateParamns(String duration, Date start) {
+	private static Calendar prepareDateParams(String duration, Date start) {
 		Calendar end = Calendar.getInstance();
 		end.setTime(start);
 		if(duration.equalsIgnoreCase(ParserUtils.DURATION_VALUE_HOURLY)) {

@@ -19,7 +19,6 @@ public class ParserUtils {
   
   public static final String DURATION_VALUE_HOURLY = "hourly";
   public static final String DURATION_VALUE_DAILY = "daily";
-  //public static final String[] PARAMNS_NAMES = {PARAMNS_FILE_PATH,PARAMNS_START_DATE,PARAMNS_DURATION,PARAMNS_THRESHOLD};
   
   private ParserUtils() {
     throw new IllegalStateException("Utility class");
@@ -62,6 +61,9 @@ public class ParserUtils {
     int intValue;
     try {
        intValue = Integer.parseInt(value);
+       if(intValue <= 0) {
+    	   throw new IllegalArgumentException(ErrorMessage.INVALID_THRESHOLD_VALUE.getMessage());
+       }
     }catch (NumberFormatException e) {
       throw new IllegalArgumentException(ErrorMessage.INVALID_THRESHOLD_VALUE.getMessage());
     }
@@ -71,8 +73,9 @@ public class ParserUtils {
    /**
 	 * Validate params informed as arguments to the application 
 	 * if some is missing, then throw IllegalArgumentException
+ * @throws ParseException 
 	 * */
-	public static ApplicationArguments validateArgs(String[] args) {
+	public static ApplicationArguments validateArgs(String[] args) throws ParseException {
 		ApplicationArguments arguments = new ApplicationArguments();
 		if(args.length < 3) { throw new IllegalArgumentException(ErrorMessage.PARAMNS_MISSING.getMessage());}
 		for(int i = 0; i <= args.length-1 ;i++) {
@@ -84,9 +87,14 @@ public class ParserUtils {
 					break;
 				case ParserUtils.PARAMNS_START_DATE:
 					arguments.setStartDate(values[1]);
+					ParserUtils.stringAsDate(arguments.getStartDate(),"yyyy-MM-dd.HH:mm:ss");
 					break;
 				case ParserUtils.PARAMNS_DURATION:
 					arguments.setDuration(values[1]);
+					if(!arguments.getDuration().equalsIgnoreCase(ParserUtils.DURATION_VALUE_HOURLY)
+							&& !arguments.getDuration().equalsIgnoreCase(ParserUtils.DURATION_VALUE_HOURLY)) {
+						throw new IllegalArgumentException(ErrorMessage.INVALID_DURATION_VALUE.getMessage());
+					}
 					break;
 				case ParserUtils.PARAMNS_THRESHOLD:
 					arguments.setThreshold( ParserUtils.getValueAsInt(values[1]));
